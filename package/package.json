@@ -1,0 +1,28 @@
+{
+  "name": "repo-code-stats",
+  "version": "1.0.0",
+  "description": "Get code quality stats of the project",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaartyomsss/repo-code-stats.git"
+  },
+  "author": "aaartyomsss",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aaartyomsss/repo-code-stats/issues"
+  },
+  "homepage": "https://github.com/aaartyomsss/repo-code-stats#readme",
+  "dependencies": {
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.1",
+    "ts-node": "^10.9.2"
+  }
+}
