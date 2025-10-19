@@ -6,6 +6,7 @@ export type TraverseExtensions = {
   tsx: boolean
   js: boolean
   jsx: boolean
+  mjs: boolean
 }
 
 /**

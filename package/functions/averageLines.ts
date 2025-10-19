@@ -47,7 +47,13 @@ export function averageLinesPerFunction(
   options?: Options
 ): number {
   const { traverseExtensions } = options || {
-    traverseExtensions: { ts: true, tsx: true, js: false, jsx: false },
+    traverseExtensions: {
+      ts: true,
+      tsx: true,
+      js: true,
+      jsx: true,
+      mjs: true,
+    },
   }
 
   const allFiles = walk(dir, traverseExtensions)
@@ -80,7 +86,13 @@ export function getFunctionStatistics(
   functions: number[]
 } {
   const { traverseExtensions } = options || {
-    traverseExtensions: { ts: true, tsx: true, js: false, jsx: false },
+    traverseExtensions: {
+      ts: true,
+      tsx: true,
+      js: true,
+      jsx: true,
+      mjs: true,
+    },
   }
 
   const allFiles = walk(dir, traverseExtensions)
