@@ -3,10 +3,7 @@ export {
   averageLinesPerFunction,
   getFunctionStatistics,
 } from "./functions/averageLines"
-export {
-  getTotalLinesOfCode,
-  getTotalLinesOfCodeMultiple,
-} from "./functions/totalLinesOfCode"
+export { getTotalLinesOfCodeInDirecotry } from "./functions/totalLinesOfCode"
 export { walk, type TraverseExtensions } from "./utils/fileWalker"
 
 // Re-export for backward compatibility

@@ -71,7 +71,7 @@ function isCommentOnlyLine(line: string): boolean {
  * @param excludeComments - Whether to exclude comment-only lines from count
  * @returns Object with individual file counts and total
  */
-export function getTotalLinesOfCodeMultiple(
+export function getTotalLinesOfCodeInDirecotry(
   filePaths: string[],
   excludeEmptyLines: boolean = true,
   excludeComments: boolean = true
