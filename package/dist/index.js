@@ -10,3 +10,4 @@ Object.defineProperty(exports, "getTotalLinesOfCode", { enumerable: true, get: f
 Object.defineProperty(exports, "getTotalLinesOfCodeMultiple", { enumerable: true, get: function () { return totalLinesOfCode_1.getTotalLinesOfCodeMultiple; } });
 var fileWalker_1 = require("./utils/fileWalker");
 Object.defineProperty(exports, "walk", { enumerable: true, get: function () { return fileWalker_1.walk; } });
+//# sourceMappingURL=index.js.map

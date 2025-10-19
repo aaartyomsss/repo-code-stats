@@ -1,12 +1,23 @@
 {
   "name": "repo-code-stats",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Get code quality stats of the project",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "README.md"
+  ],
   "scripts": {
     "start": "ts-node index.ts",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run clean && npm run build",
+    "test": "node ../test/testTotalLines.js",
+    "version": "npm run build",
+    "bump:patch": "node bump-version.js patch",
+    "bump:minor": "node bump-version.js minor",
+    "bump:major": "node bump-version.js major"
   },
   "repository": {
     "type": "git",
@@ -23,6 +34,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.7.1",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2"
   }
 }
