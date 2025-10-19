@@ -71,12 +71,13 @@ git push origin main
 ## 🔍 What Happens Next
 
 1. **GitHub Actions triggers** when you push to main
-2. **Tests run** to ensure everything works
-3. **Version check** compares package.json version with published version
-4. **If version is new**:
+2. **Fresh build** is created in the CI environment (the `dist/` folder is gitignored)
+3. **Tests run** to ensure everything works
+4. **Version check** compares package.json version with published version
+5. **If version is new**:
    - Package builds and publishes to npm
    - GitHub release is created automatically
-5. **If version exists**: Nothing happens (prevents accidental republishing)
+6. **If version exists**: Nothing happens (prevents accidental republishing)
 
 ## 📋 Pre-Publish Checklist
 
@@ -98,6 +99,8 @@ npm run clean
 npm run build
 npm pack  # Creates a .tgz file you can inspect
 ```
+
+**Note**: The `dist/` folder is gitignored and won't be committed to the repository. Fresh builds are created automatically in the CI pipeline.
 
 ## 📚 NPM Scripts Available
 
