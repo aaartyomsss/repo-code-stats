@@ -1,5 +1,5 @@
 import fs from "fs"
-import { walk } from "../utils/fileWalker"
+import { TraverseExtensions, walk } from "../utils/fileWalker"
 /**
  * Counts the total lines of code in a file
  * @param filePath - Path to the file to analyze
@@ -73,12 +73,16 @@ function isCommentOnlyLine(line: string): boolean {
  */
 export function getTotalLinesOfCodeInDirectory(
   dir: string,
-  excludeEmptyLines: boolean = true,
-  excludeComments: boolean = true
+  options: {
+    traverseExtensions?: TraverseExtensions
+    excludeEmptyLines: boolean
+    excludeComments: boolean
+  }
 ): { files: Record<string, number>; total: number } {
   const files: Record<string, number> = {}
   let total = 0
-  const filePaths = walk(dir)
+  const { excludeEmptyLines, excludeComments, traverseExtensions } = options
+  const filePaths = walk(dir, traverseExtensions)
 
   for (const filePath of filePaths) {
     const lines = getTotalLinesOfCode(
