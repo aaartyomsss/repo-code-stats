@@ -13,5 +13,6 @@ export type Options = {
     tsx: boolean
     js: boolean
     jsx: boolean
+    mjs: boolean
   }
 }
