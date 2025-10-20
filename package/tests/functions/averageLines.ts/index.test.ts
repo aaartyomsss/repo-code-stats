@@ -50,6 +50,7 @@ describe("getFunctionStatistics in directory", () => {
       average: 3.25,
       min: 3,
       max: 4,
+      totalNumberOfFunctions: 4,
     })
   })
 })
