@@ -35,9 +35,6 @@ export function getFunctionLines(
       ts.isArrowFunction(node) ||
       ts.isFunctionExpression(node)
     ) {
-      const start = source.getLineAndCharacterOfPosition(node.getStart()).line
-      const end = source.getLineAndCharacterOfPosition(node.getEnd()).line
-
       // Always use custom counting to handle comments and empty lines
       const lineCount = countFunctionalLines(
         sourceText,
@@ -138,7 +135,6 @@ export function averageLinesPerFunction(
 
   const allFiles = walk(dir, traverseExtensions)
   const lengths = allFiles.flatMap((file) => getFunctionLines(file))
-  const totalNumberOfFunctions = lengths.length
   const avg = lengths.reduce((a, b) => a + b, 0) / (lengths.length || 1)
 
   console.log(
