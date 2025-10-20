@@ -9,12 +9,14 @@ type Options = {
 /**
  * Analyzes a file and extracts the number of lines for each function
  * @param filePath - Path to the file to analyze
- * @param ignoreComments - Whether to exclude comment lines from the count
+ * @param ignoreComments - Whether to exclude comment lines from the count (default: true)
+ * @param ignoreEmptyLines - Whether to exclude empty lines from the count (default: true)
  * @returns Array of line counts for each function in the file
  */
 export function getFunctionLines(
   filePath: string,
-  ignoreComments: boolean = true
+  ignoreComments: boolean = true,
+  ignoreEmptyLines: boolean = true
 ): number[] {
   const sourceText = fs.readFileSync(filePath, "utf8")
   const source = ts.createSourceFile(
@@ -35,11 +37,15 @@ export function getFunctionLines(
     ) {
       const start = source.getLineAndCharacterOfPosition(node.getStart()).line
       const end = source.getLineAndCharacterOfPosition(node.getEnd()).line
-      let lineCount = end - start + 1
 
-      if (ignoreComments) {
-        lineCount = countNonCommentLines(sourceText, node, source)
-      }
+      // Always use custom counting to handle comments and empty lines
+      const lineCount = countFunctionalLines(
+        sourceText,
+        node,
+        source,
+        ignoreComments,
+        ignoreEmptyLines
+      )
 
       functions.push(lineCount)
     }
@@ -50,24 +56,32 @@ export function getFunctionLines(
   return functions
 }
 
-function countNonCommentLines(
+function countFunctionalLines(
   sourceText: string,
   node: ts.Node,
-  _source: ts.SourceFile
+  _source: ts.SourceFile,
+  ignoreComments: boolean = true,
+  ignoreEmptyLines: boolean = true
 ): number {
   const startPos = node.getStart()
   const endPos = node.getEnd()
   const functionText = sourceText.substring(startPos, endPos)
   const lines = functionText.split("\n")
 
-  let nonCommentLines = 0
+  let functionableLines = 0
   let inBlockComment = false
 
   for (const line of lines) {
     const trimmed = line.trim()
 
-    // Skip empty lines
-    if (!trimmed) continue
+    // Skip empty lines if requested
+    if (ignoreEmptyLines && !trimmed) continue
+
+    // If not ignoring comments, count all non-empty lines (if ignoreEmptyLines is true)
+    if (!ignoreComments) {
+      functionableLines++
+      continue
+    }
 
     // Handle block comments
     if (inBlockComment) {
@@ -76,7 +90,7 @@ function countNonCommentLines(
         // Check if there's code after the closing comment
         const afterComment = trimmed.substring(trimmed.indexOf("*/") + 2).trim()
         if (afterComment && !afterComment.startsWith("//")) {
-          nonCommentLines++
+          functionableLines++
         }
       }
       continue
@@ -86,7 +100,7 @@ function countNonCommentLines(
     if (trimmed.includes("/*")) {
       const beforeComment = trimmed.substring(0, trimmed.indexOf("/*")).trim()
       if (beforeComment) {
-        nonCommentLines++
+        functionableLines++
       }
       if (!trimmed.includes("*/")) {
         inBlockComment = true
@@ -97,10 +111,10 @@ function countNonCommentLines(
     // Skip single-line comments
     if (trimmed.startsWith("//")) continue
 
-    nonCommentLines++
+    functionableLines++
   }
 
-  return nonCommentLines
+  return functionableLines
 }
 
 /**
@@ -124,6 +138,7 @@ export function averageLinesPerFunction(
 
   const allFiles = walk(dir, traverseExtensions)
   const lengths = allFiles.flatMap((file) => getFunctionLines(file))
+  const totalNumberOfFunctions = lengths.length
   const avg = lengths.reduce((a, b) => a + b, 0) / (lengths.length || 1)
 
   console.log(
@@ -149,6 +164,7 @@ export function getFunctionStatistics(
   total: number
   min: number
   max: number
+  totalNumberOfFunctions: number
 } {
   const { traverseExtensions } = options || {
     traverseExtensions: {
@@ -164,7 +180,7 @@ export function getFunctionStatistics(
   const lengths = allFiles.flatMap((file) => getFunctionLines(file))
 
   if (lengths.length === 0) {
-    return { average: 0, total: 0, min: 0, max: 0 }
+    return { average: 0, total: 0, min: 0, max: 0, totalNumberOfFunctions: 0 }
   }
 
   const total = lengths.reduce((a, b) => a + b, 0)
@@ -177,5 +193,6 @@ export function getFunctionStatistics(
     total,
     min,
     max,
+    totalNumberOfFunctions: lengths.length,
   }
 }
