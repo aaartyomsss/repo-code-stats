@@ -71,8 +71,10 @@ git push origin main
 ## 🔍 What Happens Next
 
 1. **GitHub Actions triggers** when you push to main
-2. **Fresh build** is created in the CI environment (the `dist/` folder is gitignored)
-3. **Tests run** to ensure everything works
+2. **Code quality checks**:
+   - Linting with ESLint
+   - All tests must pass
+3. **Fresh build** is created in the CI environment (the `dist/` folder is gitignored)
 4. **Version check** compares package.json version with published version
 5. **If version is new**:
    - Package builds and publishes to npm
@@ -85,6 +87,7 @@ Before pushing to main, ensure:
 
 - [ ] Version number is updated in `package.json`
 - [ ] `README.md` is updated with any new features
+- [ ] Code passes linting: `npm run lint`
 - [ ] All tests pass locally: `npm test`
 - [ ] Build works: `npm run build`
 - [ ] Changes are documented
@@ -106,9 +109,12 @@ npm pack  # Creates a .tgz file you can inspect
 
 - `npm run build` - Compile TypeScript to JavaScript
 - `npm run clean` - Remove dist folder
-- `npm test` - Run tests
+- `npm run lint` - Run ESLint to check code style
+- `npm run lint:fix` - Run ESLint and auto-fix issues
+- `npm test` - Run tests (single run)
+- `npm run test:watch` - Run tests in watch mode
 - `npm run bump:patch/minor/major` - Bump version and get instructions
-- `npm run prepublishOnly` - Runs automatically before publishing
+- `npm run prepublishOnly` - Runs lint, tests, clean, and build before publishing
 
 ## 🚨 Troubleshooting
 
@@ -122,6 +128,13 @@ npm pack  # Creates a .tgz file you can inspect
 - Verify NPM_TOKEN is set correctly in GitHub Secrets
 - Check if package name is available on npm
 - Ensure version number is higher than current published version
+
+### Linting Fails
+
+- Run ESLint locally: `npm run lint`
+- Auto-fix common issues: `npm run lint:fix`
+- Check ESLint configuration in `.eslintrc.js`
+- Review ESLint ignore patterns in `.eslintignore`
 
 ### Tests Fail
 

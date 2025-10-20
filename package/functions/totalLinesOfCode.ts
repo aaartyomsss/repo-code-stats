@@ -75,8 +75,18 @@ export function getTotalLinesOfCodeInDirectory(
   dir: string,
   options: {
     traverseExtensions?: TraverseExtensions
-    excludeEmptyLines: boolean
-    excludeComments: boolean
+    excludeEmptyLines?: boolean
+    excludeComments?: boolean
+  } = {
+    excludeEmptyLines: true,
+    excludeComments: true,
+    traverseExtensions: {
+      js: true,
+      jsx: true,
+      ts: true,
+      tsx: true,
+      mjs: true,
+    },
   }
 ): { files: Record<string, number>; total: number } {
   const files: Record<string, number> = {}

@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write # Required for creating releases
+  packages: write # Required for publishing packages
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -27,6 +31,10 @@ jobs:
       - name: Install dependencies
         working-directory: ./package
         run: npm ci
+
+      - name: Lint code
+        working-directory: ./package
+        run: npm run lint
 
       - name: Build project
         working-directory: ./package
@@ -57,6 +65,14 @@ jobs:
         working-directory: ./package
         run: npm ci
 
+      - name: Lint code
+        working-directory: ./package
+        run: npm run lint
+
+      - name: Run tests
+        working-directory: ./package
+        run: npm test
+
       - name: Build project
         working-directory: ./package
         run: npm run build
@@ -86,21 +102,17 @@ jobs:
 
       - name: Create GitHub Release
         if: steps.check.outputs.should_publish == 'true'
-        uses: actions/create-release@v1
+        run: |
+          gh release create "v${{ steps.check.outputs.package_version }}" \
+            --title "Release v${{ steps.check.outputs.package_version }}" \
+            --notes "🚀 Automated release of version ${{ steps.check.outputs.package_version }}
+
+          ## Changes
+          This release was automatically created when the version in package.json was updated.
+
+          ## Installation
+          \`\`\`bash
+          npm install repo-code-stats@${{ steps.check.outputs.package_version }}
+          \`\`\`"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ steps.check.outputs.package_version }}
-          release_name: Release v${{ steps.check.outputs.package_version }}
-          body: |
-            🚀 Automated release of version ${{ steps.check.outputs.package_version }}
-
-            ## Changes
-            This release was automatically created when the version in package.json was updated.
-
-            ## Installation
-            ```bash
-            npm install repo-code-stats@${{ steps.check.outputs.package_version }}
-            ```
-          draft: false
-          prerelease: false
