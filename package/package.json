@@ -1,6 +1,6 @@
 {
   "name": "repo-code-stats",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Get code quality stats of the project",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
